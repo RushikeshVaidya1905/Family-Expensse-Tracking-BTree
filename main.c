@@ -233,7 +233,8 @@ void PushInUser(user* meduser, btuser *medright, btuser *current, int pos)
 {
     int i;
     //Insert the given node in this tree
-    for (i = current->no_user; i > pos; i--) {
+    for (i = current->no_user; i > pos; i--) 
+    {
         current->user[i + 1] = current->user[i];
         current->children[i + 1] = current->children[i];
     }
@@ -254,7 +255,8 @@ void SplitUser(user* meduser, btuser *medright, btuser *current, int pos,user**n
 
     *newright = (btuser *)malloc(sizeof(btuser));
 
-    for (i = median + 1; i <= MAX; i++) {
+    for (i = median + 1; i <= MAX; i++) 
+    {
         (*newright)->user[i - median] = current->user[i];
         (*newright)->children[i - median] = current->children[i];
     }
@@ -281,7 +283,8 @@ void MoveLeftUser(btuser *current, int pos);
 void CombineUser(btuser *current, int pos);
 
 //Wrapper function for delete node
-btuser *DeleteTreeUser(int user_id, btuser *root) {
+btuser *DeleteTreeUser(int user_id, btuser *root) 
+{
     btuser *oldroot;
     int pos;
 
@@ -289,7 +292,8 @@ btuser *DeleteTreeUser(int user_id, btuser *root) {
     btuser* todeleteNode = SearchTreeUser(user_id,root,&pos);
     user* todelete = todeleteNode->user[pos];
     RecDeleteTreeUser(user_id, root,0);
-    if (root && root->no_user == 0) {
+    if (root && root->no_user == 0) 
+    {
         oldroot = root;
         root = root->children[0];
         free(oldroot);
@@ -302,7 +306,8 @@ void RecDeleteTreeUser(int user_id, btuser *current, int rootorno)
 {
     int pos;
     //If not available then do't do anything
-    if (!current) {
+    if (!current) 
+    {
     } 
     else
     {
@@ -399,11 +404,13 @@ void RestoreUser(btuser *current, int pos)
     }
 }
 
-void MoveRightUser(btuser *current, int pos) {
+void MoveRightUser(btuser *current, int pos) 
+{
     int c;
     btuser *t = current->children[pos];
     //shift to right for all node and child
-    for (c = t->no_user; c > 0; c--) {
+    for (c = t->no_user; c > 0; c--) 
+    {
         t->user[c + 1] = t->user[c];
         t->children[c + 1] = t->children[c];
     }
@@ -419,7 +426,8 @@ void MoveRightUser(btuser *current, int pos) {
     t->no_user--;
 }
 
-void MoveLeftUser(btuser *current, int pos) {
+void MoveLeftUser(btuser *current, int pos) 
+{
     int c;
     btuser *t = current->children[pos - 1];
     //same like moverightuser
@@ -437,7 +445,8 @@ void MoveLeftUser(btuser *current, int pos) {
     }
 }
 
-void CombineUser(btuser *current, int pos) {
+void CombineUser(btuser *current, int pos) 
+{
     int c;
     btuser *right = current->children[pos];
     btuser *left = current->children[pos - 1];
@@ -448,14 +457,16 @@ void CombineUser(btuser *current, int pos) {
     left->children[left->no_user] = right->children[0];
 
     //put all the right nodes into left user node
-    for (c = 1; c <= right->no_user; c++) {
+    for (c = 1; c <= right->no_user; c++) 
+    {
         left->no_user++;
         left->user[left->no_user] = right->user[c];
         left->children[left->no_user] = right->children[c];
     }
 
     //shift all the current nodes by l to left to get it done
-    for (c = pos; c < current->no_user; c++) {
+    for (c = pos; c < current->no_user; c++) 
+    {
         current->user[c] = current->user[c + 1];
         current->children[c] = current->children[c + 1];
     }
@@ -513,15 +524,18 @@ status_code AddUser(btuser** rootptr,btfamily** familyptr, int in_family, btexpe
 }
 
 //Here after do the same insertion and deletion like the user 
-int SearchNodeExpense(int expense_id, btexpense* current, int* pos) {
+int SearchNodeExpense(int expense_id, btexpense* current, int* pos) 
+{
     int ret_val;
     *pos = 0;
     
-    if (expense_id < current->expense[1]->expense_id) {
+    if (expense_id < current->expense[1]->expense_id) 
+    {
         *pos = 0;
         ret_val = 0;
     }
-    else {
+    else 
+    {
         for (*pos = current->no_expense; 
              expense_id < current->expense[*pos]->expense_id && (*pos) > 1; 
              (*pos)--);
@@ -530,16 +544,20 @@ int SearchNodeExpense(int expense_id, btexpense* current, int* pos) {
     return ret_val;
 }
 
-btexpense* SearchTreeExpense(int expense_id, btexpense* root, int* targetpos) {
+btexpense* SearchTreeExpense(int expense_id, btexpense* root, int* targetpos) 
+{
     btexpense* ret_val;
     
-    if (!root) {
+    if (!root) 
+    {
         ret_val = NULL;
     }
-    else if (SearchNodeExpense(expense_id, root, targetpos)) {
+    else if (SearchNodeExpense(expense_id, root, targetpos)) 
+    {
         ret_val = root;
     }
-    else {
+    else 
+    {
         ret_val = SearchTreeExpense(expense_id, root->children[*targetpos], targetpos);
     }
     
@@ -564,16 +582,20 @@ void SplitExpense(expense* med_expense, btexpense* med_right, btexpense* current
     *new_right = (btexpense*)malloc(sizeof(btexpense));
     (*new_right)->no_expense = 0;
 
-    for (int i = median + 1; i <= MAX; i++) {
+    for (int i = median + 1; i <= MAX; i++) 
+    {
         (*new_right)->expense[i - median] = current->expense[i];
         (*new_right)->children[i - median] = current->children[i];
     }
     (*new_right)->no_expense = MAX - median;
     current->no_expense = median;
 
-    if (pos <= MIN) {
+    if (pos <= MIN) 
+    {
         PushInExpense(med_expense, med_right, current, pos);
-    } else {
+    } 
+    else 
+    {
         PushInExpense(med_expense, med_right, *new_right, pos - median);
     }
 
@@ -612,11 +634,13 @@ int PushDownExpense(expense* new_expense, btexpense* current, expense** med_expe
     return 0;
 }
 
-btexpense* Insert_Expense_Node(expense* new_expense, btexpense* root) {
+btexpense* Insert_Expense_Node(expense* new_expense, btexpense* root) 
+{
     expense* med_expense;
     btexpense* med_right;
 
-    if (PushDownExpense(new_expense, root, &med_expense, &med_right)) {
+    if (PushDownExpense(new_expense, root, &med_expense, &med_right)) 
+    {
         btexpense* new_root = (btexpense*)malloc(sizeof(btexpense));
         new_root->no_expense = 1;
         new_root->expense[1] = med_expense;
@@ -627,25 +651,31 @@ btexpense* Insert_Expense_Node(expense* new_expense, btexpense* root) {
     return root;
 }
 
-void RemoveExpense(btexpense* current, int pos) {
-    for (int i = pos + 1; i <= current->no_expense; i++) {
+void RemoveExpense(btexpense* current, int pos) 
+{
+    for (int i = pos + 1; i <= current->no_expense; i++) 
+    {
         current->expense[i - 1] = current->expense[i];
         current->children[i - 1] = current->children[i];
     }
     current->no_expense--;
 }
 
-void SuccessorExpense(btexpense* current, int pos) {
+void SuccessorExpense(btexpense* current, int pos) 
+{
     btexpense* leaf = current->children[pos];
-    while (leaf->children[0]) {
+    while (leaf->children[0]) 
+    {
         leaf = leaf->children[0];
     }
     current->expense[pos] = leaf->expense[1];
 }
 
-void MoveRightExpense(btexpense* current, int pos) {
+void MoveRightExpense(btexpense* current, int pos) 
+{
     btexpense* right = current->children[pos];
-    for (int c = right->no_expense; c > 0; c--) {
+    for (int c = right->no_expense; c > 0; c--) 
+    {
         right->expense[c + 1] = right->expense[c];
         right->children[c + 1] = right->children[c];
     }
@@ -659,7 +689,8 @@ void MoveRightExpense(btexpense* current, int pos) {
     left->no_expense--;
 }
 
-void MoveLeftExpense(btexpense* current, int pos) {
+void MoveLeftExpense(btexpense* current, int pos) 
+{
     btexpense* left = current->children[pos - 1];
     btexpense* right = current->children[pos];
     left->no_expense++;
@@ -669,26 +700,30 @@ void MoveLeftExpense(btexpense* current, int pos) {
     current->expense[pos] = right->expense[1];
     right->children[0] = right->children[1];
     right->no_expense--;
-    for (int c = 1; c <= right->no_expense; c++) {
+    for (int c = 1; c <= right->no_expense; c++) 
+    {
         right->expense[c] = right->expense[c + 1];
         right->children[c] = right->children[c + 1];
     }
 }
 
-void CombineExpense(btexpense* current, int pos) {
+void CombineExpense(btexpense* current, int pos) 
+{
     btexpense* right = current->children[pos];
     btexpense* left = current->children[pos - 1];
     left->no_expense++;
     left->expense[left->no_expense] = current->expense[pos];
     left->children[left->no_expense] = right->children[0];
 
-    for (int c = 1; c <= right->no_expense; c++) {
+    for (int c = 1; c <= right->no_expense; c++) 
+    {
         left->no_expense++;
         left->expense[left->no_expense] = right->expense[c];
         left->children[left->no_expense] = right->children[c];
     }
 
-    for (int c = pos; c < current->no_expense; c++) {
+    for (int c = pos; c < current->no_expense; c++) 
+    {
         current->expense[c] = current->expense[c + 1];
         current->children[c] = current->children[c + 1];
     }
@@ -696,36 +731,56 @@ void CombineExpense(btexpense* current, int pos) {
     free(right);
 }
 
-void RestoreExpense(btexpense* current, int pos) {
-    if (pos == 0) {
-        if (current->children[1]->no_expense > MIN) {
+void RestoreExpense(btexpense* current, int pos) 
+{
+    if (pos == 0) 
+    {
+        if (current->children[1]->no_expense > MIN) 
+        {
             MoveLeftExpense(current, 1);
-        } else {
+        } 
+        else 
+        {
             CombineExpense(current, 1);
         }
-    } else if (pos == current->no_expense) {
-        if (current->children[pos - 1]->no_expense > MIN) {
+    } 
+    else if (pos == current->no_expense) 
+    {
+        if (current->children[pos - 1]->no_expense > MIN) 
+        {
             MoveRightExpense(current, pos);
-        } else {
+        } 
+        else 
+        {
             CombineExpense(current, pos);
         }
-    } else if (current->children[pos - 1]->no_expense > MIN) {
+    } 
+    else if (current->children[pos - 1]->no_expense > MIN) 
+    {
         MoveRightExpense(current, pos);
-    } else if (current->children[pos + 1]->no_expense > MIN) {
+    } 
+    else if (current->children[pos + 1]->no_expense > MIN) 
+    {
         MoveLeftExpense(current, pos + 1);
-    } else {
+    } 
+    else 
+    {
         CombineExpense(current, pos);
     }
 }
 
-void RecDeleteTreeExpense(expense* expense_id, btexpense* current, int rootorno) {
-    if (!current) {
+void RecDeleteTreeExpense(expense* expense_id, btexpense* current, int rootorno) 
+{
+    if (!current) 
+    {
         return;
     }
     int pos;
-    if (SearchNodeExpense(expense_id->expense_id, current, &pos)) {
+    if (SearchNodeExpense(expense_id->expense_id, current, &pos)) 
+    {
         pos = pos+1;
-        if (current->children[pos - 1]) {
+        if (current->children[pos - 1]) 
+        {
             SuccessorExpense(current, pos);
             RecDeleteTreeExpense(current->expense[pos], current->children[pos],rootorno);
             if(rootorno == 0)
@@ -735,22 +790,29 @@ void RecDeleteTreeExpense(expense* expense_id, btexpense* current, int rootorno)
                     RestoreExpense(current,pos);
                 }
             }
-        } else {
+        } 
+        else 
+        {
             RemoveExpense(current, pos);
         }
-    } else {
+    } 
+    else 
+    {
         pos++;
         RecDeleteTreeExpense(expense_id, current->children[pos],1);
-        if (current->children[pos] && current->children[pos]->no_expense < MIN) {
+        if (current->children[pos] && current->children[pos]->no_expense < MIN) 
+        {
             RestoreExpense(current, pos);
         }
     }
 }
 
-btexpense* DeleteTreeExpense(expense* expense_id, btexpense* root) {
+btexpense* DeleteTreeExpense(expense* expense_id, btexpense* root) 
+{
     btexpense* oldroot;
     RecDeleteTreeExpense(expense_id, root,0);
-    if (root && root->no_expense == 0) {
+    if (root && root->no_expense == 0) 
+    {
         oldroot = root;
         root = root->children[0];
         free(oldroot);
@@ -821,36 +883,45 @@ status_code AddExpense(btexpense** rootptr, btuser** userptr)
 }
 
 //Do the same form family id as of like user in btree insertion and deletion
-int SearchNodeFamily(int family_id, btfamily *current, int *pos) {
+int SearchNodeFamily(int family_id, btfamily *current, int *pos) 
+{
     int ret_val;
-    if(family_id < current->family[1]->family_id) {
+    if(family_id < current->family[1]->family_id) 
+    {
         *pos = 0;
         ret_val = 0;
     }
-    else {
+    else 
+    {
         for(*pos = current->no_family; family_id < current->family[*pos]->family_id && (*pos)>1; (*pos)--);
         ret_val = (family_id == current->family[*pos]->family_id);
     }
     return ret_val;
 }
 
-btfamily* SearchTreeFamily(int family_id, btfamily *root, int *targetpos) {
+btfamily* SearchTreeFamily(int family_id, btfamily *root, int *targetpos) 
+{
     btfamily* ret_val;
-    if(!root) {
+    if(!root) 
+    {
         ret_val = NULL;
     }
-    else if(SearchNodeFamily(family_id, root, targetpos)) {
+    else if(SearchNodeFamily(family_id, root, targetpos)) 
+    {
         ret_val = root;
     }
-    else {
+    else 
+    {
         ret_val = SearchTreeFamily(family_id, root->children[*targetpos], targetpos);
     }
     return ret_val;
 }
 
-void PushInFamily(family* medfamily, btfamily *medright, btfamily *current, int pos) {
+void PushInFamily(family* medfamily, btfamily *medright, btfamily *current, int pos) 
+{
     int i;
-    for (i = current->no_family; i > pos; i--) {
+    for (i = current->no_family; i > pos; i--) 
+    {
         current->family[i + 1] = current->family[i];
         current->children[i + 1] = current->children[i];
     }
@@ -859,7 +930,8 @@ void PushInFamily(family* medfamily, btfamily *medright, btfamily *current, int 
     current->no_family++;
 }
 
-void SplitFamily(family* medfamily, btfamily *medright, btfamily *current, int pos, family** newmedian, btfamily **newright) {
+void SplitFamily(family* medfamily, btfamily *medright, btfamily *current, int pos, family** newmedian, btfamily **newright) 
+{
     int i, median;
 
     if (pos <= MIN)
@@ -869,7 +941,8 @@ void SplitFamily(family* medfamily, btfamily *medright, btfamily *current, int p
 
     *newright = (btfamily *)malloc(sizeof(btfamily));
 
-    for (i = median + 1; i <= MAX; i++) {
+    for (i = median + 1; i <= MAX; i++) 
+    {
         (*newright)->family[i - median] = current->family[i];
         (*newright)->children[i - median] = current->children[i];
     }
@@ -887,27 +960,35 @@ void SplitFamily(family* medfamily, btfamily *medright, btfamily *current, int p
     current->no_family--;
 }
 
-int PushDownFamily(family* new_family, btfamily *current, family** med_family, btfamily** medright) {
+int PushDownFamily(family* new_family, btfamily *current, family** med_family, btfamily** medright) 
+{
     int pos;
     int ret_val;
-    if(current == NULL) {
+    if(current == NULL) 
+    {
         *med_family = new_family;
         *medright = NULL;
         ret_val = 1;
     }
-    else {
-        if(!SearchNodeFamily(new_family->family_id, current, &pos)) {
-            if(PushDownFamily(new_family, current->children[pos], med_family, medright)) {
-                if(current->no_family < MAX) {
+    else 
+    {
+        if(!SearchNodeFamily(new_family->family_id, current, &pos)) 
+        {
+            if(PushDownFamily(new_family, current->children[pos], med_family, medright)) 
+            {
+                if(current->no_family < MAX) 
+                {
                     PushInFamily(*med_family, *medright, current, pos);
                     ret_val = 0;
                 }
-                else {
+                else 
+                {
                     SplitFamily(*med_family, *medright, current, pos, med_family, medright);
                     ret_val = 1;
                 }
             }
-            else {
+            else 
+            {
                 ret_val = 0;
             }
         }
@@ -915,13 +996,15 @@ int PushDownFamily(family* new_family, btfamily *current, family** med_family, b
     return ret_val;
 }
 
-btfamily* Insert_Family_Node(family* family_node, btfamily* root) {
+btfamily* Insert_Family_Node(family* family_node, btfamily* root) 
+{
     family* medfamily;
     btfamily* medright;
     btfamily* new_root;
     btfamily* ret_val = root;
 
-    if(PushDownFamily(family_node, root, &medfamily, &medright)) {
+    if(PushDownFamily(family_node, root, &medfamily, &medright)) 
+    {
         new_root = (btfamily*)malloc(sizeof(btfamily));
         new_root->no_family = 1;
         new_root->family[1] = medfamily;
@@ -932,25 +1015,30 @@ btfamily* Insert_Family_Node(family* family_node, btfamily* root) {
     return ret_val;
 }
 
-void RemoveFamily(btfamily *current, int pos) {
+void RemoveFamily(btfamily *current, int pos) 
+{
     int i;
-    for (i = pos + 1; i <= current->no_family; i++) {
+    for (i = pos + 1; i <= current->no_family; i++) 
+    {
         current->family[i - 1] = current->family[i];
         current->children[i - 1] = current->children[i];
     }
     current->no_family--;
 }
 
-void SuccessorFamily(btfamily* current, int pos) {
+void SuccessorFamily(btfamily* current, int pos) 
+{
     btfamily* leaf;
     for (leaf = current->children[pos]; leaf->children[0]; leaf = leaf->children[0]);
     current->family[pos] = leaf->family[1];
 }
 
-void MoveRightFamily(btfamily *current, int pos) {
+void MoveRightFamily(btfamily *current, int pos) 
+{
     int c;
     btfamily *t = current->children[pos];
-    for (c = t->no_family; c > 0; c--) {
+    for (c = t->no_family; c > 0; c--) 
+    {
         t->family[c + 1] = t->family[c];
         t->children[c + 1] = t->children[c];
     }
@@ -964,7 +1052,8 @@ void MoveRightFamily(btfamily *current, int pos) {
     t->no_family--;
 }
 
-void MoveLeftFamily(btfamily *current, int pos) {
+void MoveLeftFamily(btfamily *current, int pos) 
+{
     int c;
     btfamily *t = current->children[pos - 1];
     t->no_family++;
@@ -975,13 +1064,15 @@ void MoveLeftFamily(btfamily *current, int pos) {
     current->family[pos] = t->family[1];
     t->children[0] = t->children[1];
     t->no_family--;
-    for (c = 1; c <= t->no_family; c++) {
+    for (c = 1; c <= t->no_family; c++) 
+    {
         t->family[c] = t->family[c + 1];
         t->children[c] = t->children[c + 1];
     }
 }
 
-void CombineFamily(btfamily *current, int pos) {
+void CombineFamily(btfamily *current, int pos) 
+{
     int c;
     btfamily *right = current->children[pos];
     btfamily *left = current->children[pos - 1];
@@ -990,13 +1081,15 @@ void CombineFamily(btfamily *current, int pos) {
     left->family[left->no_family] = current->family[pos];
     left->children[left->no_family] = right->children[0];
 
-    for (c = 1; c <= right->no_family; c++) {
+    for (c = 1; c <= right->no_family; c++) 
+    {
         left->no_family++;
         left->family[left->no_family] = right->family[c];
         left->children[left->no_family] = right->children[c];
     }
 
-    for (c = pos; c < current->no_family; c++) {
+    for (c = pos; c < current->no_family; c++) 
+    {
         current->family[c] = current->family[c + 1];
         current->children[c] = current->children[c + 1];
     }
@@ -1004,37 +1097,47 @@ void CombineFamily(btfamily *current, int pos) {
     free(right);
 }
 
-void RestoreFamily(btfamily *current, int pos) {
-    if (pos == 0) {
+void RestoreFamily(btfamily *current, int pos) 
+{
+    if (pos == 0) 
+    {
         if (current->children[1]->no_family > MIN)
             MoveLeftFamily(current, 1);
         else
             CombineFamily(current, 1);
     } 
-    else if (pos == current->no_family) {
+    else if (pos == current->no_family) 
+    {
         if (current->children[pos - 1]->no_family > MIN)
             MoveRightFamily(current, pos);
         else
             CombineFamily(current, pos);
     } 
-    else if (current->children[pos - 1]->no_family > MIN) {
+    else if (current->children[pos - 1]->no_family > MIN) 
+    {
         MoveRightFamily(current, pos);
     } 
-    else if (current->children[pos + 1]->no_family > MIN) {
+    else if (current->children[pos + 1]->no_family > MIN) 
+    {
         MoveLeftFamily(current, pos + 1);
     } 
-    else {
+    else 
+    {
         CombineFamily(current, pos);
     }
 }
 
-void RecDeleteTreeFamily(int family_id, btfamily *current, int rootornno) {
+void RecDeleteTreeFamily(int family_id, btfamily *current, int rootornno) 
+{
     int pos;
-    if (!current) {
+    if (!current) 
+    {
     }
     else {
-        if (SearchNodeFamily(family_id, current, &pos)) {
-            if (current->children[pos - 1]) {
+        if (SearchNodeFamily(family_id, current, &pos)) 
+        {
+            if (current->children[pos - 1]) 
+            {
                 SuccessorFamily(current, pos);
                 RecDeleteTreeFamily(current->family[pos]->family_id, current->children[pos],rootornno);
                 if(rootornno == 0)
@@ -1045,26 +1148,31 @@ void RecDeleteTreeFamily(int family_id, btfamily *current, int rootornno) {
                     }
                 }
             } 
-            else {
+            else 
+            {
                 RemoveFamily(current, pos);
             }
         } 
-        else {
+        else 
+        {
             RecDeleteTreeFamily(family_id, current->children[pos],1);
-            if (current->children[pos] && current->children[pos]->no_family < MIN) {
+            if (current->children[pos] && current->children[pos]->no_family < MIN) 
+            {
                 RestoreFamily(current, pos);
             }
         }
     }
 }
 
-btfamily* DeleteTreeFamily(int family_id, btfamily *root) {
+btfamily* DeleteTreeFamily(int family_id, btfamily *root) 
+{
     btfamily *oldroot;
     int pos;
     btfamily* todeleteNode = SearchTreeFamily(family_id, root, &pos);
     family* todelete = todeleteNode->family[pos];
     RecDeleteTreeFamily(family_id, root,0);
-    if (root && root->no_family == 0) {
+    if (root && root->no_family == 0) 
+    {
         oldroot = root;
         root = root->children[0];
         free(oldroot);
